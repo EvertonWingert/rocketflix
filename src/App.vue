@@ -8,8 +8,8 @@ import { generateRandomLetter } from './helpers/index'
 
 const { searchMovieByLetter } = MovieService();
 
-const movie = ref({} as Movie);
-const isLoading = ref(false as boolean);
+const movie = ref();
+const isLoading = ref<boolean>(false);
 
 const getRandomMovie = async (query: string) => {
   isLoading.value = true;
@@ -17,13 +17,13 @@ const getRandomMovie = async (query: string) => {
     const response = await searchMovieByLetter(query);
     movie.value = response
   } catch (error) {
+    //TODO: handle error
     console.log(error);
   } finally {
     isLoading.value = false;
   }
 
 }
-console.log(import.meta.env.VITE_APP_TITLE)
 
 </script>
 
@@ -36,6 +36,9 @@ console.log(import.meta.env.VITE_APP_TITLE)
           <h1 class="leading-6 text-4xl text-white font-bold">Não sabe o que assistir?</h1>
         </div>
         <div class="max-w-lg pt-5 mt-5">
+          <div v-if="!movie">
+            <span>Nenhum filme</span>
+          </div>
           <MovieCard :movie="movie" />
         </div>
         <button
