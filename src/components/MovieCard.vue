@@ -12,8 +12,9 @@ defineProps<Props>();
     <div class="sm:flex">
         <div class="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4">
             <img
+                v-if="movie?.poster_path"
                 class="rounded h-96 w-52 object-cover hover:opacity-75 transition ease-in-out duration-150"
-                :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+                :src="`https://image.tmdb.org/t/p/w500${movie?.poster_path}`"
             />
         </div>
         <div>

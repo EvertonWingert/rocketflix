@@ -8,7 +8,7 @@ import { generateRandomLetter } from './helpers/index'
 
 const { searchMovieByLetter } = MovieService();
 
-const movie = ref();
+const movie = ref({} as Movie);
 const isLoading = ref<boolean>(false);
 
 const getRandomMovie = async (query: string) => {
