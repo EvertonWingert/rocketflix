@@ -1,28 +1,36 @@
 <script setup lang="ts">
   import { ref } from 'vue'
 
-  import { MovieCard, History, Spinner } from './components/index'
   import { MovieService } from './service/index'
-  import { Movie } from './types/index'
+
+  import MovieCard from './components/MovieCard.vue'
+
+  import { Movie } from './types/movie'
+  import { STATES } from './types/state'
+
   import { generateRandomLetter } from './helpers/index'
+  import FailedToLoad from './components/FailedToLoad.vue'
+  import EmptyMovie from './components/EmptyMovie.vue'
+  import LoadingMovie from './components/LoadingMovie.vue'
+  import History from './components/History.vue'
+  import Spinner from './components/Spinner.vue'
 
-  const { searchMovieByLetter } = MovieService()
-
-  enum STATES {
-    IDLE,
-    LOADING,
-    LOADED,
-    ERROR,
-  }
+  const { searchMovieByChar } = MovieService()
 
   const movie = ref({} as Movie)
   const state = ref(STATES.IDLE)
   const history = ref<Movie[]>([])
 
-  const getRandomMovie = async (query: string) => {
+  const handleGenerate = () => {
+    const char = generateRandomLetter()
+
+    getRandomMovie(char)
+  }
+
+  const getRandomMovie = async (char: string) => {
     state.value = STATES.LOADING
     try {
-      const response = await searchMovieByLetter(query)
+      const response = await searchMovieByChar(char)
       movie.value = response
       history.value.push(response)
       state.value = STATES.LOADED
@@ -47,29 +55,25 @@
             <span class="text-white">Clique no botão para buscar um filme</span>
           </div>
           <div v-if="state === STATES.LOADING">
-            <div class="flex flex-row">
-              <div
-                class="bg-gray-100 opacity-50 animate-pulse w-1/2 h-72"
-              ></div>
-            </div>
+            <LoadingMovie />
           </div>
           <div v-if="state === STATES.ERROR">
-            <span class="text-red-300">Falha ao buscar filme</span>
+            <FailedToLoad />
           </div>
           <div v-if="state === STATES.LOADED && !movie">
-            <span class="text-gray-300">Nenhum filme encontrado</span>
+            <EmptyMovie />
           </div>
           <div v-else-if="state === STATES.LOADED && movie">
             <MovieCard :movie="movie" />
           </div>
         </div>
         <button
-          @click="getRandomMovie(generateRandomLetter())"
+          @click="handleGenerate"
           :disabled="state === STATES.LOADING"
           type="button"
           class="inline-flex w-full justify-center items-center px-3 py-2 border border-transparent text-base leading-4 font-medium rounded-md shadow-sm text-[#102d71] bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed"
         >
-          Encontrar filme
+          {{ state === STATES.LOADING ? 'Buscando...' : 'Encontrar filme' }}
           <Spinner class="ml-2" v-if="state === STATES.LOADING" />
         </button>
       </div>

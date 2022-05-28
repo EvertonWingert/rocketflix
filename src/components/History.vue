@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Movie } from '../types/index'
+  import { Movie } from '../types/movie'
 
   interface Props {
     movies: Movie[]
