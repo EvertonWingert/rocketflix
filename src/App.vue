@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue'
 
-  import { History } from './components/index'
-  import { MovieCard } from './components/index'
+  import { MovieCard, History, Spinner } from './components/index'
   import { MovieService } from './service/index'
   import { Movie } from './types/index'
   import { generateRandomLetter } from './helpers/index'
@@ -39,7 +38,7 @@
         </div>
         <div class="max-w-lg pt-5 mt-5">
           <div v-if="!movie">
-            <span>Nenhum filme</span>
+            <span class="text-gray-300">Nenhum filme encontrado</span>
           </div>
           <MovieCard :movie="movie" />
         </div>
