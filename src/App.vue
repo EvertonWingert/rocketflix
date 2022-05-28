@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
 
-  import { MovieCard, Spinner } from './components/index'
+  import { History } from './components/index'
+  import { MovieCard } from './components/index'
   import { MovieService } from './service/index'
   import { Movie } from './types/index'
   import { generateRandomLetter } from './helpers/index'
@@ -10,12 +11,14 @@
 
   const movie = ref({} as Movie)
   const isLoading = ref<boolean>(false)
+  const history = ref<Movie[]>([])
 
   const getRandomMovie = async (query: string) => {
     isLoading.value = true
     try {
       const response = await searchMovieByLetter(query)
       movie.value = response
+      history.value.push(response)
     } catch (error) {
       console.log(error)
     } finally {
@@ -25,7 +28,7 @@
 </script>
 
 <template>
-  <div class="w-screen h-screen flex justify-center rocketflix__background">
+  <div class="w-screen min-h-screen flex justify-center rocketflix__background">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="space-y-5">
         <div class="flex flex-col items-center justify-center pt-5 mt-5">
@@ -48,6 +51,9 @@
           Encontrar filme
           <Spinner class="ml-2" v-if="isLoading" />
         </button>
+      </div>
+      <div>
+        <History :movies="history" />
       </div>
     </div>
   </div>
